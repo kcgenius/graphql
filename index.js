@@ -1,3 +1,4 @@
+
 'use strict'
 
 const {
@@ -8,8 +9,10 @@ const {
     GraphQLInt,
     GraphQLBoolean,
   } = require('graphql');
+
 const express = require('express')
 const graphqlHTTP = require('express-graphql')
+const {getVideoById} = require('./src/data')
 
 const PORT = process.env.PORT || 3000;
 const server = express()
@@ -45,39 +48,23 @@ const queryType = new GraphQLObjectType({
     fields: {
         video: {
             type: videoType,
-            resolve: () => new Promise( (resolve) => {
-                resolve({
-                    id: 'a',
-                    title: 'GraphQL',
-                    duration: 180,
-                    watched: false,
-                })
-            })
+            args: {
+                id: {
+                    type: GraphQLID,
+                    description:'The id'
+                },
+            },
+            resolve: (_,args) => {
+                return getVideoById(args.id)
+            },
         
-        }
+        },
     }
 })
 const schema = new GraphQLSchema({
     query:queryType,
 })
 
-
-const videoA = {
-    id: '1',
-    title:'Fop',
-    duration: 1,
-    watched: false,
-}
-
-
-const videoB = {
-    id: '2',
-    title:'Fopsds',
-    duration: 1,
-    watched: false,
-}
-
-const videos = [videoA,videoB]
 
 
 server.use('/graphql', graphqlHTTP({
