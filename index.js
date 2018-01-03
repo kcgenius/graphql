@@ -11,12 +11,29 @@ type Video {
 }
 type Query {
     video: Video,
+    videos:[Video]
 }
 type Schema {
     video: Video
 }
 `);
 
+const videoA = {
+    id: '1',
+    title:'Fop',
+    duration: 1,
+    watched: false,
+}
+
+
+const videoB = {
+    id: '2',
+    title:'Fopsds',
+    duration: 1,
+    watched: false,
+}
+
+const videos = [videoA,videoB]
 
 const resolvers = {
     video: () => ({
@@ -25,11 +42,12 @@ const resolvers = {
         duration: 1,
         watched: false
     }),
+    videos : () => videos,
 };
 
 const query = `
 query myfirstQuery {
-    video {
+    videos {
         title,
         watched
     },
